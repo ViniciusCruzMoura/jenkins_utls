@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.9'
+            image 'docker:cli'
         }
     }
 
@@ -9,6 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+                sh 'docker ps --all'
             }
         }
         stage('Test') {
@@ -24,7 +25,6 @@ pipeline {
                 sh 'cat /etc/*-release'
                 sh 'ls -la'
                 sh 'pwd'
-                sh 'docker ps --all'
             }
         }
     }
