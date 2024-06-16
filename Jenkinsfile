@@ -20,8 +20,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'pip install requests'
-                sh 'python main.py'
                 sh 'cat /etc/*-release'
                 sh 'ls -la'
                 sh 'pwd'
