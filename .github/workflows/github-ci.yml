@@ -33,3 +33,5 @@ jobs:
       run: |
         echo "Teste 003"
         python3 main.py
+        cat /etc/*-release
+        ls -la
