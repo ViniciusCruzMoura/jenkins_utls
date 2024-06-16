@@ -32,3 +32,4 @@ jobs:
     - name: Test with pytest
       run: |
         echo "Teste 003"
+        python3 main.py
