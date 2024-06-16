@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -15,7 +21,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                echo 'Deploying 222....'
             }
         }
     }
