@@ -21,6 +21,10 @@ pipeline {
                 echo 'Deploying....'
                 sh 'pip install requests'
                 sh 'python main.py'
+                sh 'cat /etc/*-release'
+                sh 'ls -la'
+                sh 'pwd'
+                sh 'docker ps --all'
             }
         }
     }
