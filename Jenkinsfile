@@ -19,6 +19,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                sh 'pip install requests'
+                sh 'python main.py'
             }
         }
     }
