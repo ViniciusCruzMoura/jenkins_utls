@@ -30,7 +30,8 @@ jobs:
       run: |
         echo "Teste 003"
         python3 main.py
+        pip3 install requests
         cat /etc/*-release
         ls -la
         pip3 freeze
-        docker ps --all
+        ls -la ../
