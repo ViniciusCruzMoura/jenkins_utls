@@ -1,0 +1,30 @@
+version: "3"
+
+volumes:
+  jenkins_home:
+
+services:
+  jenkins-agent:
+    image: inbound-agent:jdk17
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM jenkins/inbound-agent:jdk17
+        USER root
+        RUN apt-get update && curl -sSL https://get.docker.com/ | sh
+    privileged: true
+    init: true
+    user: root
+    environment:
+      - JENKINS_URL=${JENKINS_URL}
+      - JENKINS_SECRET=${JENKINS_SECRET}
+      - JENKINS_AGENT_NAME=${JENKINS_AGENT_NAME}
+      - JENKINS_AGENT_WORKDIR="/var/jenkins_home"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
