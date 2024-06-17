@@ -1,0 +1,28 @@
+version: "3"
+
+volumes:
+  jenkins_home:
+
+services:
+  jenkins:
+    image: jenkins:lts
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM jenkins/jenkins:lts
+        USER root
+        RUN apt-get update
+        RUN curl -sSL https://get.docker.com/ | sh
+    privileged: true
+    user: root
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
+    deploy:
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 1024M
