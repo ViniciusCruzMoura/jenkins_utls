@@ -1,0 +1,62 @@
+default:
+  image: curlimages/curl:8.8.0
+  tags:
+    - jde
+    - prod
+    - SRV085041
+
+stages:
+  - build
+  - test
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_MERGE_REQUEST_IID == null
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == null
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == null
+    
+variables:
+  URL: "https://pokeapi.co/api/v2/pokemon/ditto"
+
+before_script:
+  - echo -e "
+    Before script section\n
+    For example you might run an update here or install a build dependency\n
+    Or perhaps you might print out some debugging details\n
+    Linux OS Release - $(cat /etc/*-release | egrep "PRETTY_NAME" | cut -d = -f 2 | tr -d '"')
+    "
+
+after_script:
+  - echo "
+    After script section
+    For example you might do some cleanup here
+    "
+
+job-build:
+  stage: build
+  only:
+    - merge_requests
+    - main
+  script:
+    - response=$(curl -H "X-API-Key$(echo ':') $CI_PORTAINER_TOKEN" $CI_PORTAINER_BUILD)
+    - echo "Build - Response - $response";
+
+job-test:
+  stage: test
+  only:
+    - merge_requests
+    - main
+  script:
+    - response=$(curl -f $URL)
+    - echo "Test - Response - $response";
+
+job-deploy:
+  stage: deploy
+  only:
+    - merge_requests
+    - main
+  script:
+    - echo "Deploy - $(curl -X POST $CI_PORTAINER_PRUNE)";
