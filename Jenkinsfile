@@ -1,28 +1,37 @@
 pipeline {
     agent {
-        docker {
-            image 'docker:cli'
-        }
+        label 'prod && srv085041'
+    }
+
+    environment {
+        env_file = credentials('cardcredenciamento_env')
     }
 
     stages {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'docker ps --all'
             }
         }
+        
         stage('Test') {
+            agent {
+                docker {
+                    image 'python:3.9'
+                    label 'prod && srv085041'
+                }
+            }
             steps {
                 echo 'Testing..'
+                sh 'cat $env_file > .env'
+                sh 'pip install --no-cache-dir -r dependencies/base.txt'
+                sh 'python -m unittest discover tests/'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sh 'cat /etc/*-release'
-                sh 'ls -la'
-                sh 'pwd'
             }
         }
     }
