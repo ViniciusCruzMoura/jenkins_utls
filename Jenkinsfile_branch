@@ -1,0 +1,41 @@
+pipeline {
+    agent {
+        label 'prod && srv085041'
+    }
+
+    stages {
+        stage('Unit Test') {
+            steps {
+                echo 'Unit Testing..'
+            }
+        }
+
+        stage('Integration Test') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/main' }
+            }
+            steps {
+                echo 'Integration Testing..'
+                echo 'Pulling...' + env.GIT_BRANCH
+            }
+        }
+		
+        stage('Build') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/main' }
+            }
+            steps {
+                echo 'Building..'
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                expression { env.GIT_BRANCH == 'origin/main' }
+            }
+            steps {
+                echo 'Deploying.....'
+            }
+        }
+    }
+}
