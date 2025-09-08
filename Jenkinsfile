@@ -21,10 +21,18 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'cat $env_file > .env'
                 sh 'docker compose build'
             }
         }
+
+		stage('Tag') {
+			steps {
+				withCredentials([usernamePassword(credentialsId: '123-example-456', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+					sh('git tag -a v$BUILD_NUMBER -m "Tag created from Jenkins for build $BUILD_NUMBER" ')
+					sh('git push https://$GIT_USERNAME:$GIT_PASSWORD@$(echo $GIT_URL | sed "s|https://||;") v$BUILD_NUMBER')
+				}
+			}
+		}
 
         stage('Deploy') {
             steps {
